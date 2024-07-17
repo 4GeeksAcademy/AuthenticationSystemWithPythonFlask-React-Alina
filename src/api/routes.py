@@ -84,19 +84,6 @@ def get_vehicles():
         return jsonify({"msg: Vehicles doesn't exist"})
     return jsonify(response_body), 200
 
-@api.route('/fav_characters', methods = ['GET'])
-@jwt_required()
-def get_fav_characters(): 
-    fav_characters = Fav_characters.query.all()
-    fav_characters_serialized = list(map(lambda item:item.serialize(), fav_characters))
-    response_body = {
-        "message" : "Nice!",
-        "data": fav_characters_serialized
-    }
-    if not(fav_characters):
-        return jsonify({"msg: You don't have any favorite Character"})
-    return jsonify(response_body), 200
-
 @api.route('/fav_vehicles', methods = ['GET'])
 @jwt_required()
 def get_fav_vechicles(): 
