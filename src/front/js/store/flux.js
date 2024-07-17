@@ -1,24 +1,20 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			people: [],
+			peopleDetails: {},
+			planets: [],
+			planetsDetails: {},
+			vehicles: [],
+			vehiclesDetails: {},
+			favorites: []
 		},
+		
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			getEntities : async(type) => {
+				const res = await fetch(`https://www.swapi.tech/api/${type}`)
+				const data = await res.json()
+				setStore({[`${type}`]: data.results})
 			},
 
 			getMessage: async () => {
@@ -33,22 +29,55 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			
+			login: async(email, password) => {
+				try{
+					let response = await fetch ("https://crispy-guide-x7qjg4qxw5qfp65p-3001.app.github.dev/api/login", {
+						method: "POST",
+						headers: {
+							"Content-Type" : "application/json"
+						},
+						body: JSON.stringify({
+							"email" : email,
+							"password" : password
+						})
+					})
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+					const data = await response.json()
+					console.log(data.msg)
+					if (!data.msg){
+						localStorage.setItem("token", data.access_token);
+					}
+					return true
 
-				//reset the global store
-				setStore({ demo: demo });
+				} catch(error) {
+					return false
+				}
+			},
+
+			logOut: async() => {
+				console.log("ASDA")
+				localStorage.removeItem("token");
+			},
+			
+			getEntitiesDetails: async(id, type) => {
+				const result = await fetch(`https://www.swapi.tech/api/${type}/${id}`)
+				const data = await result.json()
+				setStore({[`${type}Details`]: data.result.properties})
+			},
+
+			saveFavorite: (id, name, type) => {
+				setStore({favorites:[...getStore().favorites,{name: name, id: id, type: type}]})
+			},
+			
+			removeFavorite: (name) => {
+				const filteredArray  = getStore().favorites.filter((item) => item.name != name);
+				setStore({favorites: filteredArray})
 			}
 		}
+		
 	};
 };
 
 export default getState;
+
