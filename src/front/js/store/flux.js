@@ -1,6 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			users: [],
 			people: [],
 			peopleDetails: {},
 			planets: [],
@@ -32,7 +33,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			
 			login: async(email, password) => {
 				try{
-					let response = await fetch ("https://crispy-guide-x7qjg4qxw5qfp65p-3001.app.github.dev/api/login", {
+					let response = await fetch (`${process.env.BACKEND_URL}api/login`, {
 						method: "POST",
 						headers: {
 							"Content-Type" : "application/json"
@@ -47,6 +48,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log(data.msg)
 					if (!data.msg){
 						localStorage.setItem("token", data.access_token);
+					}
+					return true
+
+				} catch(error) {
+					return false
+				}
+			},
+
+			signIn: async(email, password, name) => {
+				try{
+					let response = await fetch (`https://crispy-guide-x7qjg4qxw5qfp65p-3001.app.github.dev/api/register`, {
+						method: "POST",
+						headers: {
+							"Content-Type" : "application/json"
+						},
+						body: JSON.stringify({
+							"email" : email,
+							"password" : password,
+							"name": name,
+							"is_active" : true
+						})
+					})
+
+					const data = await response.json()
+					if (!data.msg){
+						localStorage.setItem("token", data.access_token)
 					}
 					return true
 

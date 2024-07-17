@@ -12,6 +12,10 @@ export const NavbarHtml = () => {
 		actions.logOut()
 	}
 
+	function handleClickSign(){
+		actions.signIn()
+	}
+
 	return (
 		<nav className="navbar navbar-expand-lg mb-3 d-flex" data-bs-theme="dark">
 			<div className="container-fluid" >
@@ -23,7 +27,11 @@ export const NavbarHtml = () => {
 				</button>
 				<div className="navbar-collapse collapse " id="navbarNavDropdown">
 					<ul className="navbar-nav ms-5">
-						
+						<li>
+							<Link to="/register" className="nav-link active" onClick={handleClickSign}>
+								<span className="navbar-brand mb-0 h1" >SignIn</span>
+							</Link>
+						</li>
 						<li>
 							<Link to="/" className="nav-link active" onClick={handleClick}>
 								<span className="navbar-brand mb-0 h1" >LogOut</span>

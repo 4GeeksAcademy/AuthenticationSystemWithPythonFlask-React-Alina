@@ -11,13 +11,20 @@ class Users(db.Model):
 
     def __repr__(self):
         return '<Users %r>' % self.id
+    def new_user(self, email, password, name, is_active):
+        self.email = email
+        self.password = password
+        self.name = name
+        self.is_active = is_active
+        db.session.add(self)
+        db.session.commit()
+        
 
     def serialize(self):
         return {
             "id": self.id,
             "email": self.email,
-            "name":self.name,
-            "password": self.password
+            "name":self.name
             # do not serialize the password, its a security breach
         }
     

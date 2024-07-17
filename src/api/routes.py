@@ -12,6 +12,7 @@ from flask_cors import CORS
 api = Blueprint('api', __name__)
 CORS(api)
 
+
 @api.route('/login', methods=['POST'])
 def login():
     email = request.json.get('email', None)
@@ -23,6 +24,24 @@ def login():
     if password != users_query.password:
         return jsonify({"msg": "Bad username or password"}), 401
     access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token), 200
+
+@api.route('/register', methods=['POST'])
+def register():
+    request_body = request.get_json()
+
+    if Users.query.filter_by(email=request_body["email"]).first():
+        return jsonify({"msg": "Email already exists"}), 409
+   
+    user = Users()
+    user.new_user(
+        email=request_body["email"],    
+        password=request_body["password"],
+        name = request_body["name"],
+        is_active = True
+    )
+
+    access_token = create_access_token(identity=request_body["email"])
     return jsonify(access_token=access_token), 200
 
 @api.route('/protected', methods=['GET'])

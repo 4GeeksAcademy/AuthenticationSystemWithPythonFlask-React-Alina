@@ -9,6 +9,7 @@ import { VehicleDetails } from "./views/vehiclesDetails";
 import { PeopleDetails } from "./views/peopleDetails";
 import { PlanetDetails } from "./views/planetsDetails";
 import { LoginForm } from "./component/loginForm"
+import { SignUpForm } from "./component/signUp";
 
 
 //create your first component
@@ -24,6 +25,7 @@ const Layout = () => {
 					<NavbarHtml />
 					<Routes>
 						<Route path="/" element={<LoginForm />} />
+						<Route path="/register" element={<SignUpForm />} />
 						<Route path="/people" element={<Entity type={"people"} />} />
 						<Route path="/vehicles" element={<Entity type={"vehicles"} />} />
 						<Route path="/planets" element={<Entity type={"planets"} />} />
